@@ -246,13 +246,13 @@ function Player (cnv){
   }
 
   this.SetAudioContext = function(self,src){
-      console.log( "/resources/music/"+src );
+      console.log( "/resources/music/"+src.replace(/&amp;/g, '&') );
 
     self.DisconnectPrev();
 
     if(!self.audioSources[src]){
       self.audioContext = SetAudio();
-      self.audioContext.src = "/resources/music/"+src;
+      self.audioContext.src = "/resources/music/"+src.replace(/&amp;/g, '&');;
     
       self.audioContext.addEventListener('loadeddata',function(){
         console.log('loadedaudio');

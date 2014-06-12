@@ -5,25 +5,31 @@
 var fs = require('fs');
 
 module.exports.index = function(req, res){
-    res.sendfile( GS.__dirname + '/views/index.html');
+    res.sendfile( global.__dirname + '/views/index.html');
 };
 module.exports.music = function(req, res){
-    var ress = ( retFilesOfFolder( '', 'music', GS.__dirname + '/public/resources/music') );
-    console.log( ress );
-    ress.ok = true;
-    res.send( ress );
+    var path = '/resources/music';
+
+    var result = retFilesOfFolder( path, global.__dirname + '/public');
+    console.log( result );
+    result.ok = true;
+    res.send( result );
 };
 
-function retFilesOfFolder( fold, name , glPath ){
+function retFilesOfFolder( fold, glPath, previousPath ){
+
+    previousPath = previousPath || '';
+
     var glPath = glPath || '';
-    var name = name || fold.substring( fold.lastIndexOf('/') + 1, fold.length)
-        , res = { folderName: name, folders: [], files: []};
+    var name = fold.substring( fold.lastIndexOf('/') + 1, fold.length);
+    var res = { folderName: name, folders: [], files: [], path : previousPath + fold };
+
     var files = fs.readdirSync( glPath + fold );
     files = files || [];
     files.forEach(function(el,i){
         var stat = fs.statSync(glPath + fold + '/' + el);
         if(stat.isDirectory() ){
-            res.folders.push( retFilesOfFolder( '/' + el,'',glPath + fold ) );
+            res.folders.push( retFilesOfFolder( '/' + el, glPath + fold, res.path ) );
         }
         else if ( stat.isFile() ){
             if( (/\.mp3$/gi).test(el) )

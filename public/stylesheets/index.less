@@ -1,0 +1,70 @@
+
+@active-color: #007abc;
+@hover-text-color: #fff;
+@hover-background-color: darkred;
+
+html, body {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	padding: 0px;
+	margin: 0px;
+}
+
+#player-playlist {
+	position: absolute;
+	right: 2%;
+	width: 50%;
+	height: 80%;
+	top: 10%;
+	box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, .3);
+	border-radius: 5px;
+	overflow-x: hidden;
+		overflow-y: scroll;
+}
+
+.playlist-item {
+	>.playlist-item-body {
+		display: none;
+	}
+}
+.playlist-item.active {
+	>.playlist-item-body {
+		display: block;
+	}
+}
+
+.playlist-item-header {
+	
+	.playlist-item-folder {
+		border-bottom: 1px solid transparent;
+	}
+
+	.playlist-item-folder:hover {
+		cursor: pointer;
+		border-bottom-color: #007abc;
+	}
+}
+.playlist-item-body {
+	padding: 5px 0px 0px 5px;
+	border-top: 1px solid @hover-background-color;
+}
+
+.playlist-folder {
+	background-color: #e6e6e6;
+}
+
+.playlist-trek {
+	
+}
+
+.playlist-trek:hover {
+	cursor: pointer;
+	color: @hover-text-color;
+	background-color: @hover-background-color;
+}
+
+.playlist-trek.active {
+	color: @hover-text-color;
+	background-color: @active-color;
+}

@@ -8,7 +8,7 @@ function Player (cnv){
   this.TimeElem = null;
   this.color = '#000088';
   this.canvas = cnv || null;
-  
+
   this.createTrekList = function(el,self){
 
     for (var i = 0; i < self.folders.length; i++) {
@@ -54,9 +54,9 @@ function Player (cnv){
 
         elementdiv.addEventListener('click',function(e){
 
-          self.curEl.style.borderColor = "white";
+          //self.curEl.style.borderColor = "white";
           self.curEl = (e.target);
-          self.curEl.style.borderColor = "lightblue";
+          //self.curEl.style.borderColor = "lightblue";
 
           self.SetAudioContext(self,e.target.parentNode.previousSibling.innerHTML + "/" + e.target.innerHTML);
           self.BindAudioToElem(self.TimeElem);
@@ -66,7 +66,7 @@ function Player (cnv){
         contentdiv.appendChild(elementdiv);
         if(i == 0 && j == 0){
           self.curEl = elementdiv;//document.getElementById("TrekList").children[0];
-          self.curEl.style.border = "1px lightblue solid";
+          //self.curEl.style.border = "1px lightblue solid";
         }
 
       };
@@ -75,33 +75,6 @@ function Player (cnv){
 
 
     }
-
-    /*for (var i = 0; i < self.sources.length; i++) {
-    
-      var div = document.createElement('div');
-      div.className = "TrekListElement";
-      var self = this;
-      div.addEventListener('click',function(e){
-
-        self.curEl.style.borderColor = "white";
-        self.curEl = (e.target);
-        self.curEl.style.borderColor = "lightblue";
-
-        self.SetAudioContext(self,e.target.innerHTML);
-        self.BindAudioToElem(self.TimeElem);
-
-      },false);
-      div.innerHTML = this.sources[i];
-      el.appendChild(div);
-
-      if(i == 0){
-        self.curEl = div;//document.getElementById("TrekList").children[0];
-        self.curEl.style.border = "1px lightblue solid";
-      }
-
-
-    }  */
-    
   }
 
 

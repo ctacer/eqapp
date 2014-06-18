@@ -1,54 +1,72 @@
 
 
-function PlayerView () {
-	this.setAnimationFraming();
-	this.setOptions();
-};
+!function () {
 
-PlayerView.prototype.setAnimationFraming = function () {
-	window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
-};
+	"use strict";
 
-PlayerView.prototype.setOptions = function () {
-	this.options = {
-		'color' : '#8A3333',
-		'lineCap' : 'round',
-		'spacerWidth' : 4,
-		'barWidth' : 2,
-		'offset' : 4
+	function PlayerView () {
+		this.setAnimationFraming();
+		this.setOptions();
+		this.setCanvasContext();
 	};
-};
 
-PlayerView.prototype.chooseSong = function () {
-	//
-};
+	PlayerView.prototype.setAnimationFraming = function () {
+		window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
+	};
 
-PlayerView.prototype.render = function () {
+	PlayerView.prototype.setCanvasContext = function () {
+		this.canvas = jQuery("#canvas").get(0);
+		this.context = this.canvas.getContext("2d");
+	};
 
-	var renderFunction = (function () {
+	PlayerView.prototype.setOptions = function () {
+		this.options = {
+			'color' : '#8A3333',
+			'lineCap' : 'round',
+			'spacerWidth' : 4,
+			'barWidth' : 2,
+			'offset' : 4
+		};
+	};
 
-		window.requestAnimationFrame(renderFunction); 
-      
-		var freqByteData = new Uint8Array(this.analyser.frequencyBinCount);
-		this.analyser.getByteFrequencyData(freqByteData);
+	PlayerView.prototype.chooseSong = function () {
+		//
+	};
 
-		ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		ctx.fillStyle = this.options.color;  
-		ctx.lineCap = this.options.lineCap;
+	PlayerView.prototype.render = function () {
 
-		var spacerWidth = this.options.spacerWidth;
-		var numBars = Math.round(this.canvas.width / spacerWidth);  
-		var barWidth = this.options.barWidth;
-		var offset = this.options.offset; 
-		var canvasHeight = this.canvas.height;
+		var renderFunction = (function () {
 
-		for (var i = 0; i < numBars; ++i) {
-			var magnitude = freqByteData[i*offset];
-			ctx.fillRect(i * spacerWidth, canvasHeight, barWidth, -magnitude);
-		}
+			window.requestAnimationFrame(renderFunction);
 
-	}).bind(this);
-	
-	window.requestAnimationFrame(renderFunction);
+			if (!this.analyser) {
+				return;
+			}
 
-};
+			var freqByteData = new Uint8Array(this.analyser.frequencyBinCount);
+			this.analyser.getByteFrequencyData(freqByteData);
+
+			this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			this.context.fillStyle = this.options.color;
+			this.context.lineCap = this.options.lineCap;
+
+			var spacerWidth = this.options.spacerWidth;
+			var numBars = Math.round(this.canvas.width / spacerWidth);
+			var barWidth = this.options.barWidth;
+			var offset = this.options.offset;
+			var canvasHeight = this.canvas.height;
+
+			for (var i = 0; i < numBars; ++i) {
+				var magnitude = freqByteData[i*offset];
+				this.context.fillRect(i * spacerWidth, canvasHeight, barWidth, -magnitude);
+			}
+
+		}).bind(this);
+		
+		window.requestAnimationFrame(renderFunction);
+
+	};
+
+	global.PlayerView = PlayerView;
+
+} ();

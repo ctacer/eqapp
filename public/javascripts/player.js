@@ -4,41 +4,12 @@
 
   "use strict";
 
-  var playerUI = {
-    'color' : '#000088',
-    'canvas' : null
-  };
-
-
-  function PlayerModel (props) {
-
-    this.playlist = new global.Playlist(props);
-
-  }
-
-  PlayerModel.prototype.chooseSong = function (songModel) {
-    //
-  };
-
-  function Equalizer (props) {
-
-  }
-
-  function PlayerView (props) {
-
-    this.equalizer = new Equalizer(props);
-    
-    this.render = function () {};
-
-  }
-
-
   function Player (props) {
 
     this.setControllers();
-    this.view = new PlayerView(props);
+    this.view = new global.PlayerView(props);
     props.controller = this.controller.bind(this);
-    this.model = new PlayerModel(props);
+    this.model = new global.PlayerModel(props);
 
 
     this.play = function () {};
@@ -61,6 +32,11 @@
 
     'startSong' : function (songModel) {
       console.log(songModel);
+    },
+
+    'setAnalyser' : function (analyser) {
+      this.view.analyser = analyser;
+      this.view.render();
     }
   };
 

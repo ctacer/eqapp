@@ -37,6 +37,14 @@
     'setAnalyser' : function (analyser) {
       this.view.analyser = analyser;
       this.view.render();
+    },
+
+    'freeAnalyzer' : function (analyser) {
+      this.view.analyser = null;
+    },
+
+    'togglePlay' : function () {      
+      this.model.togglePlay();
     }
   };
 

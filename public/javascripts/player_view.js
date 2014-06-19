@@ -8,6 +8,7 @@
 		this.setAnimationFraming();
 		this.setOptions();
 		this.setCanvasContext();
+		this.setRenderFunction();
 	};
 
 	PlayerView.prototype.setAnimationFraming = function () {
@@ -27,17 +28,25 @@
 			'barWidth' : 2,
 			'offset' : 4
 		};
+
+		this.__states = {
+			'render' : false
+		};
 	};
 
 	PlayerView.prototype.chooseSong = function () {
 		//
 	};
 
-	PlayerView.prototype.render = function () {
+	PlayerView.prototype.stopRender = function () {
 
-		var renderFunction = (function () {
+	};
 
-			window.requestAnimationFrame(renderFunction);
+	PlayerView.prototype.setRenderFunction = function () {
+
+		this.__renderFunction = (function () {
+
+			window.requestAnimationFrame(this.__renderFunction);
 
 			if (!this.analyser) {
 				return;
@@ -62,8 +71,18 @@
 			}
 
 		}).bind(this);
-		
-		window.requestAnimationFrame(renderFunction);
+
+	};
+
+	PlayerView.prototype.render = function () {
+
+		if (this.__states.render) {
+			return;
+		}
+		else {
+			this.__states.render = true;
+			window.requestAnimationFrame(this.__renderFunction);
+		}
 
 	};
 

@@ -105,9 +105,21 @@
 		jQuery('.playlist-trek').off('click').on('click', handler);
 	};
 
+  PlaylistView.prototype.setPauseEvents = function () {
+    var self = this;
+
+    var handler = function (event) {
+      if (event.keyCode == 32) {
+        self.controller('togglePlay');
+      }
+    };
+    jQuery('body').on('keydown', handler);
+  };
+
 	PlaylistView.prototype.setPlaylistEvents = function () {
 		this.setFolderExpandingEvents();
 		this.setSongChooseEvents();
+    this.setPauseEvents();
 	};
 
 	PlaylistView.prototype.fillTemplate = function (template, playlist) {

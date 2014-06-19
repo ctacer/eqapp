@@ -14,7 +14,7 @@
 
 		this.playlist = new global.Playlist(props);
 
-		//
+		this.__mediaSources = [];
 
 	};
 
@@ -22,6 +22,10 @@
 		this.settings = {
 			'gain' : 0.4
 		};
+		this.states = {
+			'play' : true
+		};
+		this.config = props.config;
 	};
 
 	PlayerModel.prototype.setAudioContext = function () {
@@ -35,7 +39,63 @@
 	};
 
 	PlayerModel.prototype.chooseSong = function (songModel) {
-		this.loadBuffer(songModel);
+
+		this.freeNodeTree();
+
+		if (this.config.audio.sourceNodeType == "MediaElementAudioSourceNode") {
+			this.setAudioSource(songModel);
+		}
+		else if (this.config.audio.sourceNodeType == "AudioBufferSourceNode") {
+			this.loadBuffer(songModel);
+		}
+
+	};
+
+	PlayerModel.prototype.getAudioObject = function (props) { 
+		var audio = new Audio();
+		audio.src = props.url;
+		audio.controls = true;
+	  audio.autoplay = true;
+	  audio.loop = true;
+
+	  return audio;
+	};
+
+	PlayerModel.prototype.requestAudioSource = function (url) {
+		var audio, mediaSource;
+
+		this.__mediaSources.forEach(function (audioObject) {
+			if (audioObject.url == url) {
+				mediaSource = audioObject.source;
+				audio = audioObject.audio;
+			}
+		});
+
+		if (mediaSource) {			
+			this.audioSource = audio;
+			return mediaSource;
+		}
+
+		audio = this.audioSource = this.getAudioObject({
+			'url' : url
+		});
+		var mediaSource = this.context.createMediaElementSource(this.audioSource);
+
+		this.__mediaSources.push({
+			'source' : mediaSource,
+			'audio' : audio,
+			'url' : url
+		});
+
+		return mediaSource;
+
+	};
+
+	PlayerModel.prototype.setAudioSource = function (songModel) {
+		var url = songModel.path + "/" + songModel.name;
+
+	  this.source = this.requestAudioSource(url);
+	  this.buildNodeTree();
 	};
 
 	PlayerModel.prototype.loadBuffer = function (songModel) {
@@ -63,13 +123,27 @@
 	PlayerModel.prototype.decodeAudioData = function (ajaxResponse) {
 		this.context.decodeAudioData(ajaxResponse, function (arrayBuffer) {
 			this.buffer = arrayBuffer;
-			this.playSong();
+			this.source = this.context.createBufferSource();
+			this.source.buffer = this.buffer;
+
+			this.buildNodeTree();
 		}.bind(this));
 	};
 
-	PlayerModel.prototype.playSong = function () {
-		this.source = this.context.createBufferSource();
-		this.source.buffer = this.buffer;
+	PlayerModel.prototype.freeNodeTree = function () {
+		(this.source) && ('disconnect' in this.source) && (this.source.disconnect(0));
+		(this.analyser) && ('disconnect' in this.analyser) && (this.analyser.disconnect(0));
+		(this.gainNode) && ('disconnect' in this.gainNode) && (this.gainNode.disconnect(0));
+
+		this.controller('freeAnalyzer');
+		// this.destination.disconnect(0);
+	};
+
+	PlayerModel.prototype.buildNodeTree = function (source) {
+
+		if (source) {
+			this.source = source;
+		}		
 
 		this.gainNode = this.context.createGain();
 		this.gainNode.gain.value = this.settings.gain;
@@ -84,11 +158,43 @@
 
 		this.controller('setAnalyser', this.analyser);
 
-		this.source.start(0);
+		this.play();
 	};
 
-	PlayerModel.prototype.stopSong = function () {
-		this.source.stop(0);
+	PlayerModel.prototype.play = function () {
+		if (this.source instanceof MediaElementAudioSourceNode) {			
+		  this.audioSource.play();
+		}
+		else if (this.source instanceof AudioBufferSourceNode) {
+			this.source.start(0);
+		}
+
+		this.states.play = true;
+	};
+
+	PlayerModel.prototype.stop = function () {};
+
+	PlayerModel.prototype.pause = function () {
+
+		if (this.source instanceof MediaElementAudioSourceNode) {
+			this.audioSource.pause();
+		}
+		else if (this.source instanceof AudioBufferSourceNode) {
+			this.source.stop(0);
+		}
+
+		console.log('pause');
+
+		this.states.play = false;
+	};
+
+	PlayerModel.prototype.togglePlay = function () {
+		if (this.states.play) {
+			this.pause();
+		}
+		else {
+			this.play();
+		}
 	};
 
 	global.PlayerModel = PlayerModel;

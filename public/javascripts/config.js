@@ -7,7 +7,10 @@ var global = {
 			'get' : {
 				'musicList' : '/music'
 			}
-		}
+		},
+    'audio' : {
+      'sourceNodeType' : "MediaElementAudioSourceNode" // [ "MediaElementAudioSourceNode", "AudioBufferSourceNode" ] 
+    }
 	}
 
 };

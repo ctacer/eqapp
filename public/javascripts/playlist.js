@@ -114,12 +114,31 @@
       }
     };
     jQuery('body').on('keydown', handler);
+
+    jQuery('#player-play-pause-button').off('click').on('click', function () {
+      handler.call(this, { 'keyCode' : '32' });
+    });
+  };
+
+  PlaylistView.prototype.setPlayerVolumeEvents = function () {
+    var self = this;
+
+    var handler = function () {
+      var max = parseInt(jQuery(this).attr('max'));
+      var min = parseInt(jQuery(this).attr('min'));
+      var val = parseInt(jQuery(this).val());
+
+      var volume = val / (max - min);
+      self.controller('setVolume', volume);
+    };
+    jQuery("#player-volume-range").off('change').on('change', handler);
   };
 
 	PlaylistView.prototype.setPlaylistEvents = function () {
 		this.setFolderExpandingEvents();
 		this.setSongChooseEvents();
     this.setPauseEvents();
+    this.setPlayerVolumeEvents();
 	};
 
 	PlaylistView.prototype.fillTemplate = function (template, playlist) {

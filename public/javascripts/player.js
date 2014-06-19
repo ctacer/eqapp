@@ -45,6 +45,10 @@
 
     'togglePlay' : function () {      
       this.model.togglePlay();
+    },
+
+    'setVolume' : function (volume) {
+      this.model.setVolume(volume);
     }
   };
 

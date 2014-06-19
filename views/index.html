@@ -27,27 +27,22 @@
 <body>
 
 
+	<div id="player-controllers">
+		<div id="player-play-pause-button" class="left pointer">
+			<div class="button"></div>
+		</div>		
+		<div id="player-volume-range-container" class="left">
+			<input type="range" id="player-volume-range" min="0" max="100" value="100" />
+		</div>
+
+		<div class="clear"></div>
+	</div>
 	<div id="player-playlist">
 		<div id="player-playlist-container"></div>
 	</div>
-	<canvas id="canvas" width="1024" height="400"></canvas>
-	<div id="player-controllers"></div>
-	<div id="player-equalizer"></div>
-
-	<!--
-	<div id="TrekList"></div>	
-	<div>
-	  <div>	    
-	    <canvas id="fft" width="1024" height="400"></canvas>
-	  </div>
-	</div>
-	<div id="controls">
-		<div id="currentTime"></div>
-		<input type="range" id="timeRange" name="points" value="0" min="o" max="100">
-		<div id="duration"></div>
-		<div style="clear:both;"></div>
-	</div>
-	-->
+	<div id="player-view">
+		<canvas id="canvas" width="1024" height="400"></canvas>
+	</div>	
 
 </body>
 </html>

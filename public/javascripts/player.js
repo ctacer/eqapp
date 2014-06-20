@@ -49,6 +49,10 @@
 
     'setVolume' : function (volume) {
       this.model.setVolume(volume);
+    },
+
+    'setPosition' : function (position) {
+      this.model.setPosition(position);
     }
   };
 

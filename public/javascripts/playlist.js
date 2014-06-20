@@ -64,7 +64,18 @@
   PlaylistModel.prototype.setFirstSong = function () {
   	if (this.playlist.length) {
   		this.playing = this.playlist[0];
-  		this.controller('startSong', this.playing);
+
+      var selector = 
+        ".playlist-trek" + 
+        "[data-path=\"" +this.playing.path + "\"]" +
+        "[data-folder=\"" +this.playing.folder + "\"]" +
+        "[data-name=\"" +this.playing.name + "\"]";
+
+      var folder = jQuery(selector).parents(".playlist-item");
+      if (!folder.hasClass("active")) {
+        folder.trigger('click');
+      }
+      jQuery(selector).trigger('click');
   	}
   };
 
@@ -120,18 +131,36 @@
     });
   };
 
+  var getRangeValue = function () {
+    var max = parseInt(jQuery(this).attr('max'));
+    var min = parseInt(jQuery(this).attr('min'));
+    var val = parseInt(jQuery(this).val());
+
+    return val / (max - min);
+  };
+
   PlaylistView.prototype.setPlayerVolumeEvents = function () {
     var self = this;
 
     var handler = function () {
-      var max = parseInt(jQuery(this).attr('max'));
-      var min = parseInt(jQuery(this).attr('min'));
-      var val = parseInt(jQuery(this).val());
-
-      var volume = val / (max - min);
+      var volume = getRangeValue.call(this);
       self.controller('setVolume', volume);
     };
     jQuery("#player-volume-range").off('change').on('change', handler);
+  };
+
+  PlaylistView.prototype.setPlayerPositionEvents = function () {
+    var self = this;
+
+    var handler = function () {
+      var position = getRangeValue.call(this);
+      self.controller('setPosition', position);
+    };
+    jQuery("#player-position-range").off('change').on('change', handler);
+  };
+
+  PlaylistView.prototype.tickAudioPosition = function (position) {
+    jQuery("#player-position-range").val(position);
   };
 
 	PlaylistView.prototype.setPlaylistEvents = function () {
@@ -139,6 +168,7 @@
 		this.setSongChooseEvents();
     this.setPauseEvents();
     this.setPlayerVolumeEvents();
+    this.setPlayerPositionEvents();
 	};
 
 	PlaylistView.prototype.fillTemplate = function (template, playlist) {
@@ -166,8 +196,11 @@
   PlaylistView.prototype.buildPlaylist = function (playlist, jParent) {
     var self = this;
 
-    jParent = jParent || jQuery("#player-playlist-container");
     var template = jQuery(this.templates.playlistItem);
+    if (!jParent) {
+      template.addClass("active");
+    }
+    jParent = jParent || jQuery("#player-playlist-container");
     this.fillTemplate(template, playlist);
     jParent.append(template);
     playlist.folders.forEach(function (folder) {
@@ -222,7 +255,10 @@
   	this.modes.loopSong = !this.modes.loopSong;
   };
   Playlist.prototype.loopPlaylist = function () {
-  	this.modes.loopPlaylist = !this.modes.loopPlaylist;
+    this.modes.loopPlaylist = !this.modes.loopPlaylist;
+  };
+  Playlist.prototype.tickAudioPosition = function () {
+  	this.playlistView.tickAudioPosition.apply(this.playlistView, arguments);
   };
 
   Playlist.prototype.loadPlaylist = function () {

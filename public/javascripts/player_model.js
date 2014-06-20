@@ -17,6 +17,7 @@
 		this.buildStartNodes();
 
 		this.__mediaSources = [];
+		this.__timeTicker;
 
 	};
 
@@ -189,6 +190,31 @@
 		}
 
 		this.states.play = true;
+		this.setTimeTicker();
+	};
+
+	PlayerModel.prototype.setTimeTicker = function () {
+
+			clearInterval(this.__timeTicker);
+			this.__timeTicker = setInterval(function () {
+
+				var currentTime = 0;
+				if (!this.audioSource || !this.audioSource.currentTime) {
+					this.playlist.tickAudioPosition(0);
+					return;
+				}
+
+				currentTime = (this.audioSource.currentTime / this.audioSource.duration) * 100;
+				currentTime = Math.floor(currentTime);
+				console.log(this.audioSource.currentTime, this.audioSource.duration, currentTime);
+				this.playlist.tickAudioPosition(currentTime);
+
+			}.bind(this), 1000);
+
+	};
+
+	PlayerModel.prototype.clearTimeTicker = function () {
+		clearInterval(this.__timeTicker);
 	};
 
 	PlayerModel.prototype.stop = function () {};
@@ -203,6 +229,7 @@
 		}
 
 		this.states.play = false;
+		this.clearTimeTicker();
 	};
 
 	PlayerModel.prototype.togglePlay = function () {
@@ -216,6 +243,10 @@
 
 	PlayerModel.prototype.setVolume = function (volume) {
 		this.gainNode.gain.value = volume;
+	};
+
+	PlayerModel.prototype.setPosition = function (position) {
+		this.audioSource.currentTime = position*this.audioSource.duration;
 	};
 
 	global.PlayerModel = PlayerModel;

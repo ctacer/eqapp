@@ -56,26 +56,30 @@
 
   PlaylistModel.prototype.getNextSong = function () {
   	if (this.played.length < this.playlist.length - 1) {
-  		//this.pla
+  		//this.playing = //next
+      //throwNextSong()
   	}
   };
   PlaylistModel.prototype.getPrevSong = function () {};
 
+  PlaylistModel.prototype.throwNextSong = function () {
+    var selector = 
+      ".playlist-trek" + 
+      "[data-path=\"" +this.playing.path + "\"]" +
+      "[data-folder=\"" +this.playing.folder + "\"]" +
+      "[data-name=\"" +this.playing.name + "\"]";
+
+    var folder = jQuery(selector).parents(".playlist-item");
+    if (!folder.hasClass("active")) {
+      folder.trigger('click');
+    }
+    jQuery(selector).trigger('click');
+  };
+
   PlaylistModel.prototype.setFirstSong = function () {
   	if (this.playlist.length) {
   		this.playing = this.playlist[0];
-
-      var selector = 
-        ".playlist-trek" + 
-        "[data-path=\"" +this.playing.path + "\"]" +
-        "[data-folder=\"" +this.playing.folder + "\"]" +
-        "[data-name=\"" +this.playing.name + "\"]";
-
-      var folder = jQuery(selector).parents(".playlist-item");
-      if (!folder.hasClass("active")) {
-        folder.trigger('click');
-      }
-      jQuery(selector).trigger('click');
+      this.throwNextSong();
   	}
   };
 

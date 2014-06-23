@@ -126,6 +126,8 @@
     var handler = function (event) {
       if (event.keyCode == 32) {
         self.controller('togglePlay');
+        event.preventDefault && event.preventDefault();
+        return false;
       }
     };
     jQuery('body').on('keydown', handler);
@@ -163,8 +165,27 @@
     jQuery("#player-position-range").off('change').on('change', handler);
   };
 
-  PlaylistView.prototype.tickAudioPosition = function (position) {
-    jQuery("#player-position-range").val(position);
+  PlaylistView.prototype.tickAudioPosition = function (props) {
+    jQuery("#player-position-range").val(props.position);
+    
+    jQuery("#player-position-range-container>.left-time").text( global.helper.str.convertTimestampToMinuteSecond(props.left) );
+    jQuery("#player-position-range-container>.last-time").text( global.helper.str.convertTimestampToMinuteSecond(props.last) );
+  };
+
+  PlaylistView.prototype.setPlayingState = function (props) {
+    props = props || {};
+
+    jQuery('#player-play-pause-button').removeClass("playing stoped paused");
+
+    if (props.playing) {
+      jQuery('#player-play-pause-button').addClass("playing");
+    }
+    else if (props.stoped) {
+      jQuery('#player-play-pause-button').addClass("stoped");
+    }
+    else if (props.paused) {
+      jQuery('#player-play-pause-button').addClass("paused");
+    }
   };
 
 	PlaylistView.prototype.setPlaylistEvents = function () {
@@ -207,8 +228,9 @@
     jParent = jParent || jQuery("#player-playlist-container");
     this.fillTemplate(template, playlist);
     jParent.append(template);
+    var container = template.find('.playlist-item-body');
     playlist.folders.forEach(function (folder) {
-      self.buildPlaylist(folder, template.find('.playlist-item-body'));
+      self.buildPlaylist(folder, container);
     });
   };
 
@@ -262,7 +284,10 @@
     this.modes.loopPlaylist = !this.modes.loopPlaylist;
   };
   Playlist.prototype.tickAudioPosition = function () {
-  	this.playlistView.tickAudioPosition.apply(this.playlistView, arguments);
+    this.playlistView.tickAudioPosition.apply(this.playlistView, arguments);
+  };
+  Playlist.prototype.setPlayingState = function () {
+  	this.playlistView.setPlayingState.apply(this.playlistView, arguments);
   };
 
   Playlist.prototype.loadPlaylist = function () {

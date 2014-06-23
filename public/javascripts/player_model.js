@@ -56,11 +56,11 @@
 
 	PlayerModel.prototype.getAudioObject = function (props) { 
 		var audio = new Audio();
-		audio.src = props.url.replace(/&amp;/g, '&');
 		audio.controls = true;
 	  audio.autoplay = true;
 	  audio.loop = true;
 
+		audio.src = props.url.replace(/&amp;/g, '&');
 	  return audio;
 	};
 
@@ -72,12 +72,11 @@
 		this.__mediaSources.forEach(function (audioObject) {
 			if (audioObject.url == url) {
 				mediaSource = audioObject.source;
-				audio = audioObject.audio;
 			}
 		});
 
 		if (mediaSource) {			
-			this.audioSource = audio;
+			this.audioSource = mediaSource.mediaElement;
 			callback(mediaSource);
 			return;
 		}
@@ -87,12 +86,11 @@
 		});
 
 		var self = this;
-		audio.addEventListener('loadeddata', function() {
+		audio.addEventListener('loadeddata', function () {
       var mediaSource = self.context.createMediaElementSource(self.audioSource);
 
       self.__mediaSources.push({
 				'source' : mediaSource,
-				'audio' : audio,
 				'url' : url
 			});
 
@@ -106,6 +104,7 @@
 		var url = songModel.path + "/" + songModel.name;
 
 	  this.requestAudioSource(url, (function (source) {
+	  	this.audioSource.currentTime = 0;
 	  	this.source = source;
 	  	this.buildNodeTree();
 	  }).bind(this));
@@ -158,9 +157,9 @@
 			this.source = source;
 		}
 
-		console.log(this.source);
-		console.log(this.audioSource);
-		console.log(this.audioSource.src);
+		// console.log(this.source);
+		// console.log(this.audioSource);
+		// console.log(this.audioSource.src);
 
 		this.source.connect(this.gainNode);
 
@@ -190,6 +189,7 @@
 		}
 
 		this.states.play = true;
+		this.playlist.setPlayingState({ 'playing' : true });
 		this.setTimeTicker();
 	};
 
@@ -198,16 +198,21 @@
 			clearInterval(this.__timeTicker);
 			this.__timeTicker = setInterval(function () {
 
-				var currentTime = 0;
+				var currentTimePercentage = 0;
+				var leftTime = 0;
+				var lastTime = 0;
+
 				if (!this.audioSource || !this.audioSource.currentTime) {
-					this.playlist.tickAudioPosition(0);
+					this.playlist.tickAudioPosition({ 'position' : 0, 'left' : 0, 'last' : 0 });
 					return;
 				}
 
-				currentTime = (this.audioSource.currentTime / this.audioSource.duration) * 100;
-				currentTime = Math.floor(currentTime);
-				console.log(this.audioSource.currentTime, this.audioSource.duration, currentTime);
-				this.playlist.tickAudioPosition(currentTime);
+				leftTime = this.audioSource.currentTime;
+				lastTime = this.audioSource.duration - this.audioSource.currentTime;
+
+				currentTimePercentage = (this.audioSource.currentTime / this.audioSource.duration) * 100;
+				currentTimePercentage = Math.floor(currentTimePercentage);
+				this.playlist.tickAudioPosition({ 'position' : currentTimePercentage, 'left' : this.audioSource.currentTime, 'last' : lastTime });
 
 			}.bind(this), 1000);
 
@@ -217,7 +222,9 @@
 		clearInterval(this.__timeTicker);
 	};
 
-	PlayerModel.prototype.stop = function () {};
+	PlayerModel.prototype.stop = function () {
+		this.playlist.setPlayingState({ 'stoped' : true });
+	};
 
 	PlayerModel.prototype.pause = function () {
 
@@ -229,6 +236,7 @@
 		}
 
 		this.states.play = false;
+		this.playlist.setPlayingState({ 'paused' : true });
 		this.clearTimeTicker();
 	};
 

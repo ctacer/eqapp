@@ -34,6 +34,22 @@
       console.log(songModel);
     },
 
+    'nextSong' : function () {
+      this.model.nextSong();
+    },
+
+    'prevSong' : function () {
+      this.model.prevSong();
+    },
+
+    'shufflePlaylist' : function (activate) {
+      this.model.playlist.shuffle(activate);
+    },
+
+    'repeatPlaylist' : function (activate) {
+      this.model.playlist.repeat(activate);
+    },
+
     'setAnalyser' : function (analyser) {
       this.view.analyser = analyser;
       this.view.render();

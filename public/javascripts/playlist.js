@@ -54,13 +54,63 @@
   	this.modes.loopPlaylist = !this.modes.loopPlaylist;
   };
 
-  PlaylistModel.prototype.getNextSong = function () {
-  	if (this.played.length < this.playlist.length - 1) {
-  		//this.playing = //next
-      //throwNextSong()
-  	}
+  PlaylistModel.prototype.prevSong = function () {
+    if (this.played.length > 1) {
+      this.playing = this.played[this.played.length - 2];
+      this.throwNextSong();
+    }
   };
-  PlaylistModel.prototype.getPrevSong = function () {};
+
+  PlaylistModel.prototype.nextSong = function () {
+    if (this.modes.loopSong) {
+      
+    }
+    else if (this.modes.shuffle) {
+      var index = Math.floor(Math.random() * (this.playlist.length + 1));
+      index = Math.min(index, this.playlist.length - 1);
+      if (index < 0) {
+        index = 0;
+      }
+
+      this.playing = this.playlist[index];      
+    }
+    else {
+      var index = 0;
+      var playing = this.playing;
+
+      this.playlist.forEach(function (song, i) {
+        if (song.name == playing.name && song.path == playing.path) {
+          index = i + 1;
+        }
+      });
+
+      if (index >= this.playlist.length) {
+        index = this.playlist.length - 1;
+      }
+
+      this.playing = this.playlist[index];
+    }
+
+    this.throwNextSong();
+  };
+
+  PlaylistModel.prototype.songStarted = function (model) {
+
+    var getSong = function (arr) {
+      var res = arr.filter(function (song) {
+        return song.name == model.name && song.path == model.path;
+      });
+
+      return res.length ? res[0] : null;
+    };
+
+    var song = getSong(this.playlist);
+
+    if (song) {
+      this.played.push(song);
+      this.playing = song;
+    }
+  };
 
   PlaylistModel.prototype.throwNextSong = function () {
     var selector = 
@@ -115,6 +165,16 @@
 			jQuery('.playlist-trek').removeClass('active');
 			jQuery(this).addClass('active');
 
+      var container = jQuery(jQuery(this).parents('.playlist-item').get(0));
+      while (container.length && !container.hasClass('active')) {
+        container.addClass('active');
+        container = container.parents('.playlist-item');
+        if (!container.get(0)) {
+          break;
+        }
+        container = jQuery(container.get(0));
+      }
+
 			self.throwSongEvent(jQuery(this));
 		};
 		jQuery('.playlist-trek').off('click').on('click', handler);
@@ -134,6 +194,32 @@
 
     jQuery('#player-play-pause-button').off('click').on('click', function () {
       handler.call(this, { 'keyCode' : '32' });
+    });
+  };
+
+  PlaylistView.prototype.setPlaybackControllsEvent = function () {
+    var self = this;
+
+    jQuery('#player-playback-controlls .shuffle').off('click').on('click', function (event) {
+      self.controller('shufflePlaylist', jQuery(this).hasClass('active'));
+      jQuery(this).toggleClass('active');
+    });
+
+    jQuery('#player-playback-controlls .repeat').off('click').on('click', function (event) {
+      self.controller('repeatPlaylist', jQuery(this).hasClass('active'));
+      jQuery(this).toggleClass('active');
+    });
+  };
+
+  PlaylistView.prototype.setPlaylistMoveEvent = function () {
+    var self = this;
+
+    jQuery('#player-pointer-controlls .prev-pointer').off('click').on('click', function (event) {
+      self.controller('prevSong');
+    });
+
+    jQuery('#player-pointer-controlls .next-pointer').off('click').on('click', function (event) {
+      self.controller('nextSong');
     });
   };
 
@@ -192,6 +278,8 @@
 		this.setFolderExpandingEvents();
 		this.setSongChooseEvents();
     this.setPauseEvents();
+    this.setPlaybackControllsEvent();
+    this.setPlaylistMoveEvent();
     this.setPlayerVolumeEvents();
     this.setPlayerPositionEvents();
 	};
@@ -275,13 +363,13 @@
   }
 
   Playlist.prototype.shuffle = function () {
-  	this.modes.shuffle = !this.modes.shuffle;
+  	this.playlistModel.modes.shuffle = !this.playlistModel.modes.shuffle;
   };
-  Playlist.prototype.loopSong = function () {
-  	this.modes.loopSong = !this.modes.loopSong;
+  Playlist.prototype.repeat = function () {
+  	this.playlistModel.modes.loopSong = !this.playlistModel.modes.loopSong;
   };
   Playlist.prototype.loopPlaylist = function () {
-    this.modes.loopPlaylist = !this.modes.loopPlaylist;
+    this.playlistModel.modes.loopPlaylist = !this.playlistModel.modes.loopPlaylist;
   };
   Playlist.prototype.tickAudioPosition = function () {
     this.playlistView.tickAudioPosition.apply(this.playlistView, arguments);
@@ -297,6 +385,18 @@
       self.playlistView.buildView(data);
       self.playlistModel.buildModel(data);
     });    
+  };
+
+  Playlist.prototype.nextSong = function () {
+    this.playlistModel.nextSong();
+  };
+
+  Playlist.prototype.prevSong = function () {
+    this.playlistModel.prevSong();
+  };
+
+  Playlist.prototype.songStarted = function (model) {
+    this.playlistModel.songStarted(model);
   };
 
   global.Playlist = Playlist;

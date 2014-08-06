@@ -29,16 +29,33 @@
 
 
 	<div id="player-controllers">
+
+		<div id="player-pointer-controlls" class="left">
+			<div class="prev-pointer">
+		    <div class="playlist-pointer"></div>
+		  </div>
+		  <div class="next-pointer">
+		    <div class="playlist-pointer"></div>
+		  </div>
+		</div>
+
 		<div id="player-play-pause-button" class="left pointer">
 			<div class="button"></div>
-		</div>		
+		</div>	
+
 		<div id="player-volume-range-container" class="left">
 			<input type="range" id="player-volume-range" min="0" max="100" value="100" />
 		</div>
+
 		<div id="player-position-range-container" class="left">
 			<input type="range" id="player-position-range" min="0" max="100" value="0" />
 			<span class="left-time"></span>
 			<span class="last-time"></span>
+		</div>
+		
+		<div id="player-playback-controlls" class="left">
+			<div class="icon shuffle"></div>
+			<div class="icon repeat"></div>
 		</div>
 
 		<div class="clear"></div>

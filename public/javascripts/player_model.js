@@ -57,8 +57,8 @@
 	PlayerModel.prototype.getAudioObject = function (props) { 
 		var audio = new Audio();
 		audio.controls = true;
-	  audio.autoplay = true;
-	  audio.loop = true;
+	  // audio.autoplay = true;
+	  // audio.loop = true;
 
 		audio.src = props.url.replace(/&amp;/g, '&');
 	  return audio;
@@ -85,18 +85,21 @@
 			'url' : url
 		});
 
-		var self = this;
 		audio.addEventListener('loadeddata', function () {
-      var mediaSource = self.context.createMediaElementSource(self.audioSource);
+      var mediaSource = this.context.createMediaElementSource(this.audioSource);
 
-      self.__mediaSources.push({
+      this.__mediaSources.push({
 				'source' : mediaSource,
 				'url' : url
 			});
 
 			callback(mediaSource);
 
-    },false);
+    }.bind(this));
+
+    audio.addEventListener('ended', function (event) {
+    	this.controller("nextSong");
+    }.bind(this));
 
 	};
 
@@ -107,6 +110,9 @@
 	  	this.audioSource.currentTime = 0;
 	  	this.source = source;
 	  	this.buildNodeTree();
+
+	  	this.playlist.songStarted(songModel);
+
 	  }).bind(this));
 	};
 
@@ -144,11 +150,6 @@
 
 	PlayerModel.prototype.freeNodeTree = function () {
 		(this.source) && ('disconnect' in this.source) && (this.source.disconnect(0));
-		// (this.analyser) && ('disconnect' in this.analyser) && (this.analyser.disconnect(0));
-		// (this.gainNode) && ('disconnect' in this.gainNode) && (this.gainNode.disconnect(0));
-
-		// this.controller('freeAnalyzer');
-		
 	};
 
 	PlayerModel.prototype.buildNodeTree = function (source) {
@@ -156,10 +157,6 @@
 		if (source) {
 			this.source = source;
 		}
-
-		// console.log(this.source);
-		// console.log(this.audioSource);
-		// console.log(this.audioSource.src);
 
 		this.source.connect(this.gainNode);
 
@@ -255,6 +252,14 @@
 
 	PlayerModel.prototype.setPosition = function (position) {
 		this.audioSource.currentTime = position*this.audioSource.duration;
+	};
+
+	PlayerModel.prototype.nextSong = function () {
+		this.playlist.nextSong();
+	};
+
+	PlayerModel.prototype.prevSong = function () {
+		this.playlist.prevSong();
 	};
 
 	global.PlayerModel = PlayerModel;

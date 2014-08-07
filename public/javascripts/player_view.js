@@ -9,7 +9,7 @@
 		this.setOptions();
 		this.setCanvasContext();
 		this.setRenderFunction();
-	};
+	}
 
 	PlayerView.prototype.setAnimationFraming = function () {
 		window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;

@@ -62,11 +62,13 @@
   };
 
   PlaylistModel.prototype.nextSong = function () {
+    var index;
+
     if (this.modes.loopSong) {
       
     }
     else if (this.modes.shuffle) {
-      var index = Math.floor(Math.random() * (this.playlist.length + 1));
+      index = Math.floor(Math.random() * (this.playlist.length + 1));
       index = Math.min(index, this.playlist.length - 1);
       if (index < 0) {
         index = 0;
@@ -75,11 +77,11 @@
       this.playing = this.playlist[index];      
     }
     else {
-      var index = 0;
+      index = 0;
       var playing = this.playing;
 
       this.playlist.forEach(function (song, i) {
-        if (song.name == playing.name && song.path == playing.path) {
+        if (song.name === playing.name && song.path === playing.path) {
           index = i + 1;
         }
       });
@@ -98,7 +100,7 @@
 
     var getSong = function (arr) {
       var res = arr.filter(function (song) {
-        return song.name == model.name && song.path == model.path;
+        return song.name === model.name && song.path === model.path;
       });
 
       return res.length ? res[0] : null;
@@ -184,7 +186,7 @@
     var self = this;
 
     var handler = function (event) {
-      if (event.keyCode == 32) {
+      if (event.keyCode === 32) {
         self.controller('togglePlay');
         event.preventDefault && event.preventDefault();
         return false;

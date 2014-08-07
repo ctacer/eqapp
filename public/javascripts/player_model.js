@@ -6,8 +6,6 @@
 
 	function PlayerModel (props) {
 
-		"use strict";
-
 		this.controller = props.controller;
 		this.setSettings(props);
 		this.setAudioContext();
@@ -19,7 +17,7 @@
 		this.__mediaSources = [];
 		this.__timeTicker;
 
-	};
+	}
 
 	PlayerModel.prototype.setSettings = function (props) {
 		this.settings = {
@@ -45,10 +43,10 @@
 
 		this.freeNodeTree();
 
-		if (this.config.audio.sourceNodeType == "MediaElementAudioSourceNode") {
+		if (this.config.audio.sourceNodeType === "MediaElementAudioSourceNode") {
 			this.setAudioSource(songModel);
 		}
-		else if (this.config.audio.sourceNodeType == "AudioBufferSourceNode") {
+		else if (this.config.audio.sourceNodeType === "AudioBufferSourceNode") {
 			this.loadBuffer(songModel);
 		}
 
@@ -70,7 +68,7 @@
 		var audio, mediaSource;		
 
 		this.__mediaSources.forEach(function (audioObject) {
-			if (audioObject.url == url) {
+			if (audioObject.url === url) {
 				mediaSource = audioObject.source;
 			}
 		});

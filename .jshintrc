@@ -1,0 +1,27 @@
+{
+  "curly": true,
+  "eqnull": true,
+  "eqeqeq": true,
+  "expr": true,
+  "undef": true,
+  "globals": {
+    "jQuery": true,
+    "async": true,
+    "console": true,
+    "clearInterval": true,
+    "clearTimeout": true,
+    "document": true,
+    "Image": true,
+    "Audio": true,
+    "location": true,
+    "navigator": true,
+    "setInterval": true,
+    "setTimeout": true,
+    "window": true,
+    "XMLHttpRequest": true,
+    "AudioContext": true,
+    "MediaElementAudioSourceNode": true,
+    "AudioBufferSourceNode": true,
+    "Uint8Array": true
+  }
+}

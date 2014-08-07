@@ -8,7 +8,7 @@
     var xhr = new XMLHttpRequest();
  
     xhr.onload = function (e) {
-       if (xhr.status == 200) {
+       if (xhr.status === 200) {
           props.success && props.success(this.response);
        }
        else {
@@ -33,4 +33,4 @@
 
   global.fileLoader = fileLoader;
 
-} ();
+} ()

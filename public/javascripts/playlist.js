@@ -195,7 +195,7 @@
     jQuery('body').on('keydown', handler);
 
     jQuery('#player-play-pause-button').off('click').on('click', function () {
-      handler.call(this, { 'keyCode' : '32' });
+      handler.call(this, { 'keyCode' : 32 });
     });
   };
 

@@ -31,18 +31,31 @@ module.exports = function(grunt) {
         src: 'build/<%= pkg.name %>.js',
         dest: 'build/<%= pkg.name %>.min.js'
       }
+    },
+
+    traceur: {
+      options: {
+        experimental: true,
+        sourceMap: true,
+        blockBinding: true,
+        includeRuntime: true
+      },
+      custom: {
+        files: [{
+          expand: true,
+          cwd: 'public/javascripts/es6',
+          src: ['*.js'],
+          dest: 'build'
+        }]
+      }
     }
 
   });
 
-  // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-
-  grunt.loadNpmTasks('grunt-contrib-concat');
-
-  grunt.loadNpmTasks('grunt-contrib-jshint');
+  require('load-grunt-tasks')(grunt);
 
   // Default task(s).
   grunt.registerTask('default', ['concat', 'jshint', 'uglify']);
+  grunt.registerTask('traceur', ['traceur']);
 
 };

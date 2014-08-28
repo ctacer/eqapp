@@ -9,7 +9,8 @@ var global = {
 			}
 		},
     'audio' : {
-      'sourceNodeType' : "MediaElementAudioSourceNode" // [ "MediaElementAudioSourceNode", "AudioBufferSourceNode" ] 
+      'sourceNodeType' : "MediaElementAudioSourceNode", // [ "MediaElementAudioSourceNode", "AudioBufferSourceNode" ] 
+      'maxCashLength' : 4
     }
 	}
 

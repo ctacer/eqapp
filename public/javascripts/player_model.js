@@ -4,6 +4,9 @@
 
 	"use strict";
 
+	/**
+	 * PlayerModel constructor function - sets all default values 
+	 */
 	function PlayerModel (props) {
 
 		this.controller = props.controller;
@@ -14,11 +17,17 @@
 
 		this.buildStartNodes();
 
-		this.__mediaSources = [];
-		this.__timeTicker;
+		this.audioSource = new Audio();
+		this.source;
+
+		this.privates = {};
+		this.privates.timeTicker = 0;
 
 	}
 
+	/**
+	 * function sets player settings
+	 */
 	PlayerModel.prototype.setSettings = function (props) {
 		this.settings = {
 			'gain' : 1.0
@@ -29,6 +38,9 @@
 		this.config = props.config;
 	};
 
+	/**
+	 * function sets audio context or throws an error if audio context is not supported
+	 */
 	PlayerModel.prototype.setAudioContext = function () {
 		window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
@@ -39,12 +51,15 @@
 		this.context = new AudioContext();
 	};
 
+	/**
+	 * function chooses a loading method depending on configuration
+	 */
 	PlayerModel.prototype.chooseSong = function (songModel) {
 
 		this.freeNodeTree();
 
 		if (this.config.audio.sourceNodeType === "MediaElementAudioSourceNode") {
-			this.setAudioSource(songModel);
+			this.setMediaElement(songModel);
 		}
 		else if (this.config.audio.sourceNodeType === "AudioBufferSourceNode") {
 			this.loadBuffer(songModel);
@@ -52,61 +67,45 @@
 
 	};
 
-	PlayerModel.prototype.getAudioObject = function (props) { 
-		var audio = new Audio();
-		audio.controls = true;
-	  // audio.autoplay = true;
-	  // audio.loop = true;
-
-		audio.src = props.url.replace(/&amp;/g, '&');
-	  return audio;
+	/**
+	 * function sets new audio source from given data
+	 */
+	PlayerModel.prototype.setAudioSource = function (props) {
+		this.audioSource.controls = true;
+	  
+	  this.audioSource.preload = false;
+		this.audioSource.src = props.url.replace(/&amp;/g, '&');
+	  return this.audioSource;
 	};
 
+	/**
+	 * function sets new audio source object, loads data 
+	 * and fires a callback with just built media element
+	 */
 	PlayerModel.prototype.requestAudioSource = function (url, callback) {
 		callback = callback || function () {};
 
-		var audio, mediaSource;		
+		this.setAudioSource({ 'url' : url });
 
-		this.__mediaSources.forEach(function (audioObject) {
-			if (audioObject.url === url) {
-				mediaSource = audioObject.source;
-			}
-		});
+		this.audioSource.onloadeddata = function () {
+			console.log('loadeddata');
+      if (!this.source) {
+      	this.source = this.context.createMediaElementSource(this.audioSource);
+      }
 
-		if (mediaSource) {			
-			this.audioSource = mediaSource.mediaElement;
-			callback(mediaSource);
-			return;
-		}
+      callback();
 
-		audio = this.audioSource = this.getAudioObject({
-			'url' : url
-		});
-
-		audio.addEventListener('loadeddata', function () {
-      var mediaSource = this.context.createMediaElementSource(this.audioSource);
-
-      this.__mediaSources.push({
-				'source' : mediaSource,
-				'url' : url
-			});
-
-			callback(mediaSource);
-
-    }.bind(this));
-
-    audio.addEventListener('ended', function (event) {
-    	this.controller("nextSong");
-    }.bind(this));
-
+    }.bind(this);
 	};
 
-	PlayerModel.prototype.setAudioSource = function (songModel) {
+	/**
+	 * function builds media element
+	 */
+	PlayerModel.prototype.setMediaElement = function (songModel) {
 		var url = songModel.path + "/" + songModel.name;
 
 	  this.requestAudioSource(url, (function (source) {
 	  	this.audioSource.currentTime = 0;
-	  	this.source = source;
 	  	this.buildNodeTree();
 
 	  	this.playlist.songStarted(songModel);
@@ -114,6 +113,9 @@
 	  }).bind(this));
 	};
 
+	/**
+	 * function loads song as arraybuffer data type
+	 */
 	PlayerModel.prototype.loadBuffer = function (songModel) {
 
 		var self = this;
@@ -136,6 +138,9 @@
 		});
 	};
 
+	/**
+	 * function decodes arraybuffer data and creates buffer source
+	 */
 	PlayerModel.prototype.decodeAudioData = function (ajaxResponse) {
 		this.context.decodeAudioData(ajaxResponse, function (arrayBuffer) {
 			this.buffer = arrayBuffer;
@@ -146,21 +151,29 @@
 		}.bind(this));
 	};
 
+	/**
+	 * function disconnects media element from speakers
+	 */
 	PlayerModel.prototype.freeNodeTree = function () {
 		(this.source) && ('disconnect' in this.source) && (this.source.disconnect(0));
 	};
 
+	/**
+	 * function connects media element to the speakers
+	 */
 	PlayerModel.prototype.buildNodeTree = function (source) {
-
 		if (source) {
 			this.source = source;
 		}
 
 		this.source.connect(this.gainNode);
-
 		this.play();
 	};
 
+	/**
+	 * function builds initial node tree with gain - volume controller, 
+	 * analyser - frequencies controller, destination - speakers
+	 */
 	PlayerModel.prototype.buildStartNodes = function () {
 		this.gainNode = this.context.createGain();
 		this.gainNode.gain.value = this.settings.gain;
@@ -175,6 +188,9 @@
 		this.controller('setAnalyser', this.analyser);
 	};
 
+	/**
+	 * function initialaze playing of current audio source depending on sorce type
+	 */
 	PlayerModel.prototype.play = function () {
 		if (this.source instanceof MediaElementAudioSourceNode) {			
 		  this.audioSource.play();
@@ -188,39 +204,56 @@
 		this.setTimeTicker();
 	};
 
+	/**
+	 * function sets new ticker function for new playing song
+	 * also sets new song ended listener
+	 */
 	PlayerModel.prototype.setTimeTicker = function () {
 
-			clearInterval(this.__timeTicker);
-			this.__timeTicker = setInterval(function () {
+		this.audioSource.onended = function (event) {
+    	this.controller("nextSong");
+    }.bind(this);
 
-				var currentTimePercentage = 0;
-				var leftTime = 0;
-				var lastTime = 0;
+		clearInterval(this.privates.timeTicker);
+		this.privates.timeTicker = setInterval(function () {
 
-				if (!this.audioSource || !this.audioSource.currentTime) {
-					this.playlist.tickAudioPosition({ 'position' : 0, 'left' : 0, 'last' : 0 });
-					return;
-				}
+			var currentTimePercentage = 0;
+			var leftTime = 0;
+			var lastTime = 0;
 
-				leftTime = this.audioSource.currentTime;
-				lastTime = this.audioSource.duration - this.audioSource.currentTime;
+			if (!this.audioSource || !this.audioSource.currentTime) {
+				this.playlist.tickAudioPosition({ 'position' : 0, 'left' : 0, 'last' : 0 });
+				return;
+			}
 
-				currentTimePercentage = (this.audioSource.currentTime / this.audioSource.duration) * 100;
-				currentTimePercentage = Math.floor(currentTimePercentage);
-				this.playlist.tickAudioPosition({ 'position' : currentTimePercentage, 'left' : this.audioSource.currentTime, 'last' : lastTime });
+			leftTime = this.audioSource.currentTime;
+			lastTime = this.audioSource.duration - this.audioSource.currentTime;
 
-			}.bind(this), 1000);
+			currentTimePercentage = (this.audioSource.currentTime / this.audioSource.duration) * 100;
+			currentTimePercentage = Math.floor(currentTimePercentage);
+			this.playlist.tickAudioPosition({ 'position' : currentTimePercentage, 'left' : this.audioSource.currentTime, 'last' : lastTime });
 
+		}.bind(this), 1000);
 	};
 
+	/**
+	 * function clears time ticker and onended listeners
+	 */
 	PlayerModel.prototype.clearTimeTicker = function () {
-		clearInterval(this.__timeTicker);
+		clearInterval(this.privates.timeTicker);
+		this.audioSource.onended = function () { };
 	};
 
+	/**
+	 * function initiates stop of the song
+	 */
 	PlayerModel.prototype.stop = function () {
 		this.playlist.setPlayingState({ 'stoped' : true });
 	};
 
+	/**
+	 * function initiates pause of the song
+	 */
 	PlayerModel.prototype.pause = function () {
 
 		if (this.source instanceof MediaElementAudioSourceNode) {
@@ -235,6 +268,9 @@
 		this.clearTimeTicker();
 	};
 
+	/**
+	 * function toggles song state between playing and pausing
+	 */
 	PlayerModel.prototype.togglePlay = function () {
 		if (this.states.play) {
 			this.pause();
@@ -244,18 +280,30 @@
 		}
 	};
 
+	/**
+	 * function sets new volume value - affects gain audio node, not an audio source itself
+	 */
 	PlayerModel.prototype.setVolume = function (volume) {
 		this.gainNode.gain.value = volume;
 	};
 
+	/**
+	 * function sets playback position (time the song just played)
+	 */
 	PlayerModel.prototype.setPosition = function (position) {
-		this.audioSource.currentTime = position*this.audioSource.duration;
+		this.audioSource.currentTime = position * this.audioSource.duration;
 	};
 
+	/**
+	 * function initiates next song playing
+	 */
 	PlayerModel.prototype.nextSong = function () {
 		this.playlist.nextSong();
 	};
 
+	/**
+	 * function initiates previous song playing
+	 */
 	PlayerModel.prototype.prevSong = function () {
 		this.playlist.prevSong();
 	};

@@ -4,15 +4,15 @@
  */
 var fs = require('fs');
 
-module.exports.index = function(req, res){
-    res.sendfile( global.__dirname + '/views/index.html');
-};
 module.exports.music = function(req, res){
     var path = '/resources/music';
 
     var result = retFilesOfFolder( path, global.__dirname + '/public');
     console.log( result );
     result.ok = true;
+    res.set({
+        'Access-Control-Allow-Origin': '*'
+    });
     res.send( result );
 };
 

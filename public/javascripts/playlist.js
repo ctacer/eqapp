@@ -386,7 +386,11 @@
     jQuery.get(this.config.endpoints.get.musicList, function(data, textStatus, xhr) {
       self.playlistView.buildView(data);
       self.playlistModel.buildModel(data);
-    });    
+    });
+
+    jQuery.get('/music/v2', function(data, textStatus, xhr) {
+      console.log(data);
+    });
   };
 
   Playlist.prototype.nextSong = function () {

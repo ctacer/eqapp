@@ -29,6 +29,7 @@ app.use(express.static(global.modules.path.join(__dirname, 'public')));
 app.use('/resources', express.static('C:/Users/sstasishin/Music'));
 
 app.get('/music', global.routes.indexRoute.music);
+app.get('/music/v2', global.routes.indexRoute.resources);
 
 global.modules.http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

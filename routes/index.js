@@ -7,7 +7,7 @@ var fs = require('fs');
 module.exports.music = function(req, res){
     var path = '/all';//'/resources/music';
 
-    var result = retFilesOfFolder( path, 'C:/Users/sstasishin/Music'/*global.__dirname*/);    
+    var result = getHierarchicalFileList(path, 'C:/Users/sstasishin/Music'/*global.__dirname*/);    
     result.ok = true;
     res.set({
         'Access-Control-Allow-Origin': '*'
@@ -18,7 +18,17 @@ module.exports.music = function(req, res){
     res.send( result );
 };
 
-function retFilesOfFolder( fold, glPath, previousPath ){
+module.exports.resources = function(req, res){
+    var path = { 
+        relative: '/resources', 
+        global: 'C:/Users/sstasishin/Music'
+    };
+
+    var result = getFileList('', path);
+    res.send({ ok: true, list: result });
+};
+
+function getHierarchicalFileList (fold, glPath, previousPath) {
 
     previousPath = previousPath || '/resources';
 
@@ -31,7 +41,7 @@ function retFilesOfFolder( fold, glPath, previousPath ){
     files.forEach(function(el,i){
         var stat = fs.statSync(glPath + fold + '/' + el);
         if(stat.isDirectory() ){
-            res.folders.push( retFilesOfFolder( '/' + el, glPath + fold, res.path ) );
+            res.folders.push( getHierarchicalFileList( '/' + el, glPath + fold, res.path ) );
         }
         else if ( stat.isFile() ){
             if( (/\.mp3$/gi).test(el) )
@@ -40,4 +50,22 @@ function retFilesOfFolder( fold, glPath, previousPath ){
     });
     return res;
 
+}
+
+function getFileList (folder, pathObject) {
+
+    var list = [];
+    var directoryComponents = fs.readdirSync(pathObject.global + folder);
+    directoryComponents = directoryComponents || [];
+
+    directoryComponents.forEach(function(component, index){
+        var stat = fs.statSync(pathObject.global + folder + '/' + component);
+        if(stat.isDirectory()){
+            list = list.concat(getFileList(folder + '/' + component, pathObject));
+        }
+        else if (stat.isFile() && (/\.mp3$/gi).test(component)) {
+            list.push(pathObject.relative + folder + '/' + component);
+        }
+    });
+    return list;
 }

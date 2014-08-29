@@ -304,7 +304,7 @@
   };  
   
   PlaylistView.prototype.buildView = function (playlist) {
-  	this.buildPlaylist(playlist);
+    this.buildPlaylist(playlist);
   	this.setPlaylistEvents();
   };
 

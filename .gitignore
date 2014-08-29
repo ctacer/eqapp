@@ -1,31 +1,9 @@
-public/resources/music/wardruna/Wardruna – Dagr.mp3
-public/resources/music/wardruna/Wardruna – Fehu (OST Vikings).mp3
-public/resources/music/wardruna/Wardruna – Fehu.mp3
-public/resources/music/wardruna/Wardruna – Gibu (1).mp3
-public/resources/music/wardruna/Wardruna – Hagal.mp3
-public/resources/music/wardruna/Wardruna – Heimta Thurs.mp3
-public/resources/music/wardruna/Wardruna – Helvegen.mp3
-public/resources/music/wardruna/Wardruna – IngwaR.mp3
-public/resources/music/wardruna/Wardruna – IwaR.mp3
-public/resources/music/wardruna/Wardruna – NaudiR.mp3
-public/resources/music/wardruna/Wardruna – Rotlaust Tre Fell.mp3
-public/resources/music/wardruna/Wardruna – Solringen.mp3
-public/resources/music/wardruna/wardruna – gibu.mp3
+resources/music/*
 
 public/bower_components/*
-public/javascripts/old
-public/resources/music
+
 eqapp.sublime-project
 eqapp.sublime-workspace
 
 node_modules/*
-public/resources/music/lp/Aluna George – You Know You Like It (Dj Snake Remix).mp3
-public/resources/music/lp/Linkin Park – Guilty All The Same.mp3
-public/resources/music/lp/Linkin Park – Until It's Gone.mp3
-public/resources/music/lp/Linkin Park – Wastelands.mp3
-public/resources/music/lp/Lullabies - Yuna (Adventure Club Remix).mp3
-public/resources/music/lp/Nuages - Dreams.mp3
-public/resources/music/lp/Nuages – Stay (Party Time Remix).mp3
-public/resources/music/lp/Tomas Barfod – November . Skies feat . Nina Kinert.mp3
-
 build/*

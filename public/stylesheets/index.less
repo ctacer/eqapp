@@ -30,16 +30,16 @@ html, body {
 }
 
 #player-playlist {
-	position: absolute;
-	right: 2%;
-	width: 50%;
-	height: 80%;
-	top: 10%;
-	box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, .3);
-	border-radius: 5px;
-	overflow-x: hidden;
-	overflow-y: scroll;
-	z-index: 20;
+	position: fixed;
+  height: 20%;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  z-index: 20;
 }
 
 .playlist-item {
@@ -89,34 +89,35 @@ html, body {
 }
 
 #player-view {
-	position: absolute;
-	left: 0px;
-	right: 0px;
+	position: relative;
+  padding: 8px 10%;
+  left: 0px;
 	top: 0px;
-	bottom: 0px;
-	perspective: 1000px;
-	-webkit-perspective: 1000px;
+	perspective: 2000px;
+	-webkit-perspective: 2000px;
 }
 
 #canvas {
-	position: absolute;
-  left: 30px;
-	top: 7%;
   z-index: -2;
-  -webkit-transform: rotateX(-36deg) rotateY(49deg) translateY(262px);/*rotateX(-30deg) rotateY(30deg);  */
+  -webkit-transform: rotateX(0deg) rotateY(0deg);
   -webkit-box-reflect: below 5px -webkit-linear-gradient(top, transparent, transparent 50%, rgba(255,255,255,0.2));
-  -webkit-transform-origin:left center;
+}
+
+#wave {
+  position: absolute;
+  top: 10%;
+  left: 0px;
+  width: 100%;
+  height: 80%;
+  z-index: -3;
 }
 
 #player-controllers {
-	position: absolute;
-	top: 1%;
-	left: 10%;
-	right: 10%;
+  position: relative;
 	height: 40px;
 	box-shadow: 0px 0px 4px 0px rgba(0,0,0,.2);
 	z-index: 10;
-	padding: 8px;
+	padding: 8px 10%;
 }
 
 #player-pointer-controlls {

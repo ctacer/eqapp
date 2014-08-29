@@ -7,7 +7,7 @@ var fs = require('fs');
 module.exports.music = function(req, res){
     var path = '/resources/music';
 
-    var result = retFilesOfFolder( path, global.__dirname + '/public');
+    var result = retFilesOfFolder( path, global.__dirname);
     console.log( result );
     result.ok = true;
     res.set({

@@ -69,7 +69,7 @@
 		var spacerWidth = this.options.frequency.spacerWidth;
 		var numBars = Math.round(this.frequencyCanvas.width / spacerWidth);
 		var barWidth = this.options.frequency.barWidth;
-		var offset = Math.floor(frequencies.length / numBars) + 1;
+		var offset = Math.floor(frequencies.length / numBars);
 		var frequencyCanvasHeight = this.frequencyCanvas.height;
 
 		for (var i = 0; i < numBars; ++i) {

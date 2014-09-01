@@ -3,6 +3,7 @@
 @hover-text-color: #fff;
 @hover-background-color: darkred;
 
+@import 'drag-n-drop.widget.less';
 @import 'scroll';
 
 html, body {
@@ -12,6 +13,7 @@ html, body {
 	padding: 0px;
 	margin: 0px;
   overflow-x: hidden;
+  -webkit-user-select: none;
 }
 
 .clear {
@@ -317,4 +319,27 @@ input[type="range"]::-webkit-slider-thumb {
 			background-image: url('/resources/imgs/repeat.png');
 		}
 	}
+}
+
+#dropable-playlist {
+  position: absolute;
+  right: 0px;
+  top: 25%;
+  bottom: 25%;
+  z-index: 50;
+  background-color: rgba(0, 0, 0, .1);
+  border: 1px;
+  border-radius: 5px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  width: 20%;
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.3);
+
+  padding: 20px;
+
+  .container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
 }

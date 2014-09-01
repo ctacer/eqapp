@@ -6,7 +6,8 @@ var config = {
 			'port' : 3000
 		},
 		'resources' : {
-			'dir' : 'C:/Users/sstasishin/Music/all'
+			'dir' : 'C:/Users/sstasishin/Music/all/The Art of FLIGHT (2011) Soundtrack',
+			'dirExperimental': 'C:/'
 		}
 	}
 };

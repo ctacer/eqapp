@@ -27,6 +27,7 @@ app.use(global.modules.bodyParser.json());
 app.use(express.static(global.modules.path.join(__dirname, 'public')));
 // app.use('/resources', express.static(__dirname + '/resources'));
 app.use('/resources', express.static(global.config.resources.dir));
+app.use('/resources/experimental', express.static(global.config.resources.dirExperimental));
 
 app.get('/music', global.routes.indexRoute.music);
 app.get('/music/v2', global.routes.indexRoute.resources);

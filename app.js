@@ -26,7 +26,7 @@ app.set('views', __dirname + '/views');
 app.use(global.modules.bodyParser.json());
 app.use(express.static(global.modules.path.join(__dirname, 'public')));
 // app.use('/resources', express.static(__dirname + '/resources'));
-app.use('/resources', express.static('C:/Users/sstasishin/Music'));
+app.use('/resources', express.static(global.config.resources.dir));
 
 app.get('/music', global.routes.indexRoute.music);
 app.get('/music/v2', global.routes.indexRoute.resources);

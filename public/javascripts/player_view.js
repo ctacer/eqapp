@@ -61,6 +61,9 @@
 		element.width = sizes.width || jQuery(element).innerWidth() || 0;
 	};
 
+	/**
+	 * function draws frequencies bars per frame
+	 */
 	PlayerView.prototype.drawFrequencies = function (frequencies) {
 		this.frequncyContext.clearRect(0, 0, this.frequencyCanvas.width, this.frequencyCanvas.height);
 		this.frequncyContext.fillStyle = this.options.frequency.color;

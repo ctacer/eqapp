@@ -5,15 +5,16 @@
 var fs = require('fs');
 
 module.exports.music = function(req, res){
-    var path = '/all';//'/resources/music';
+    var path = '';
 
-    var result = getHierarchicalFileList(path, 'C:/Users/sstasishin/Music'/*global.__dirname*/);    
+    var result = getHierarchicalFileList(path, global.config.resources.dir);    
     result.ok = true;
     res.set({
         'Access-Control-Allow-Origin': '*'
     });
 
-    result.path = '/resources/all';
+    result.path = '/resources' + path;
+    result.folderName = 'music';
     console.log( result );
     res.send( result );
 };
@@ -21,7 +22,7 @@ module.exports.music = function(req, res){
 module.exports.resources = function(req, res){
     var path = { 
         relative: '/resources', 
-        global: 'C:/Users/sstasishin/Music'
+        global: global.config.resources.dir
     };
 
     var result = getFileList('', path);

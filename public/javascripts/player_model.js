@@ -102,7 +102,7 @@
 	 * function builds media element
 	 */
 	PlayerModel.prototype.setMediaElement = function (songModel) {
-		var url = songModel.path + "/" + songModel.name;
+		var url = songModel.path + "/" + encodeURIComponent(songModel.name);
 
 	  this.requestAudioSource(url, (function (source) {
 	  	this.audioSource.currentTime = 0;

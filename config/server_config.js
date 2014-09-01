@@ -1,10 +1,12 @@
 
-
 var config = {
 	'dev' : {},
 	'prod' : {
 		'server' : {
 			'port' : 3000
+		},
+		'resources' : {
+			'dir' : 'C:/Users/sstasishin/Music/all/crysis'
 		}
 	}
 };

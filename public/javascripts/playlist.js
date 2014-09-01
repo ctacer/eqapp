@@ -355,6 +355,8 @@
     
     this.playlistView = new PlaylistView(props.controller);
     this.playlistModel = new PlaylistModel(props.controller);
+    var player = jQuery("#player-playlist");
+    player.resizable({ expandButton: player.find('.player-resizer') });
 
     var self = this;
     var proceedModel = function () {

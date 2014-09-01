@@ -6,7 +6,7 @@ var config = {
 			'port' : 3000
 		},
 		'resources' : {
-			'dir' : 'C:/Users/sstasishin/Music/all/crysis'
+			'dir' : 'C:/Users/sstasishin/Music/all'
 		}
 	}
 };

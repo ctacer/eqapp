@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+	<meta charset="utf-8" />	
+	<title>Web Audio</title>	
+
+	<!-- Ecma Script 6 transpiler
+		<script src="https://google.github.io/traceur-compiler/bin/traceur.js"></script>
+	  <script src="https://google.github.io/traceur-compiler/src/bootstrap.js"></script>
+
+	  <script>
+	    traceur.options.experimental = true;
+	    traceur.options.sourceMap = true;
+	    traceur.options.sourceMaps = true;
+	  </script> 
+  -->
+
+	<script type="text/javascript" src="/bower_components/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="/bower_components/async/lib/async.js"></script>
+
+	<script type="text/javascript" src="/javascripts/config.js"></script>
+	<script type="text/javascript" src="/javascripts/helper.js"></script>
+
+	<script type="text/javascript" src="/javascripts/Resizable.widget.js"></script>
+	<script type="text/javascript" src="/javascripts/DragNDrop.widget.js"></script>
+
+	<script type="text/javascript" src="/javascripts/file_loader.js"></script>
+	<script type="text/javascript" src="/javascripts/playlist.js"></script>
+	<script type="text/javascript" src="/javascripts/player_model.js"></script>
+	<script type="text/javascript" src="/javascripts/player_view.js"></script>
+	<script type="text/javascript" src="/javascripts/player.js"></script>
+	<script type="text/javascript" src="/javascripts/main.js"></script>
+
+	<link rel="stylesheet/less" type="text/css" href="/stylesheets/index.less">
+
+	<script src="/bower_components/less/dist/less-1.7.0.min.js" type="text/javascript"></script>
+
+
+</head>
+<body>
+
+
+	<div id="player-controllers">
+
+		<canvas id="wave"></canvas>
+
+		<div id="player-pointer-controlls" class="left">
+			<div class="prev-pointer">
+		    <div class="playlist-pointer"></div>
+		  </div>
+		  <div class="next-pointer">
+		    <div class="playlist-pointer"></div>
+		  </div>
+		</div>
+
+		<div id="player-play-pause-button" class="left pointer">
+			<div class="button"></div>
+		</div>	
+
+		<div id="player-volume-range-container" class="left">
+			<input type="range" id="player-volume-range" min="0" max="100" value="100" />
+		</div>
+
+		<div id="player-position-range-container" class="left">
+			<input type="range" id="player-position-range" min="0" max="100" value="0" />
+			<span class="left-time"></span>
+			<span class="last-time"></span>
+		</div>
+		
+		<div id="player-playback-controlls" class="left">
+			<div class="icon shuffle"></div>
+			<div class="icon repeat"></div>
+		</div>
+
+		<div class="clear"></div>
+	</div>
+	
+	<div id="player-view">
+		<canvas id="canvas" width="1024" height="100"></canvas>
+	</div>
+
+	<div id="player-playlist">
+		<div class="player-resizer"></div>
+		<div id="player-playlist-container"></div>
+	</div>
+
+	<div id="dropable-playlist">
+		<div class="container">Drop Here</div>		
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+resources/music/*
+
+public/bower_components/*
+
+eqapp.sublime-project
+eqapp.sublime-workspace
+
+node_modules/*
+build/*

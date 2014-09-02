@@ -3,44 +3,35 @@
  * Module dependencies.
  */
 
-GS = {};
-GS.__dirname = __dirname;
+global = {};
+global.__dirname = __dirname;
+global.config = require('./config/server_config.js').configurate();
 
 var express = require('express');
-var routes = require('./routes');
-var user = require('./routes/user');
-var http = require('http');
-var path = require('path');
+
+global.routes = {};
+global.routes.indexRoute = require('./routes');
+
+global.modules = {};
+global.modules.http = require('http');
+global.modules.path = require('path');
+global.modules.bodyParser = require('body-parser');
 
 var app = express();
+global.app = app;
 
 // all environments
-app.set('port', 3000);
+app.set('port', global.config.server.port);
 app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(express.cookieParser('your secret here'));
-app.use(express.session());
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(global.modules.bodyParser.json());
+app.use(express.static(global.modules.path.join(__dirname, 'public')));
+// app.use('/resources', express.static(__dirname + '/resources'));
+app.use('/resources', express.static(global.config.resources.dir));
+app.use('/resources/experimental', express.static(global.config.resources.dirExperimental));
 
-// development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
-}
+app.get('/music', global.routes.indexRoute.music);
+app.get('/music/v2', global.routes.indexRoute.resources);
 
-app.get('/', routes.index);
-app.get('/music', routes.music);
-app.get('/audio', function(req, res){
-    res.send({audio: '/Downloads/Under You Spell.mp3',
-        dir: __dirname,
-        ot_dir: GS.__dirname
-    });
-})
-
-http.createServer(app).listen(app.get('port'), function(){
+global.modules.http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });

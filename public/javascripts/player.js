@@ -1,19 +1,6 @@
 
 
-<<<<<<< HEAD
-function Player (cnv){
-  this.ROOT = "/resources/music/";
-  this.sources = [];
-  this.audioSources = {};
-  this.currBuffer = null;
-  this.TimeElem = null;
-  this.color = '#000088';
-  this.canvas = cnv || null;
-
-  this.createTrekList = function(el,self){
-=======
 !function () {
->>>>>>> origin/refactore_branch
 
   "use strict";
 
@@ -25,54 +12,12 @@ function Player (cnv){
     this.model = new global.PlayerModel(props);
 
 
-<<<<<<< HEAD
-      },false);
-      corediv.appendChild(tittlediv);
-
-      var contentdiv = document.createElement('div');
-      if( i != 0 )
-        contentdiv.className = "ContentSubFolder";
-      corediv.appendChild(contentdiv);
-
-      for (var j = 0; j < self.folders[i].folderSources.length; j++) {
-        //self.folders[i].folderSources[j]
-
-        var elementdiv = document.createElement('div');
-        elementdiv.className = "ContentSubFolderElement";
-
-        elementdiv.addEventListener('click',function(e){
-
-          //self.curEl.style.borderColor = "white";
-          self.curEl = (e.target);
-          //self.curEl.style.borderColor = "lightblue";
-
-          self.SetAudioContext(self,e.target.parentNode.previousSibling.innerHTML + "/" + e.target.innerHTML);
-          self.BindAudioToElem(self.TimeElem);
-
-        },false);
-        elementdiv.innerHTML = self.folders[i].folderSources[j];
-        contentdiv.appendChild(elementdiv);
-        if(i == 0 && j == 0){
-          self.curEl = elementdiv;//document.getElementById("TrekList").children[0];
-          //self.curEl.style.border = "1px lightblue solid";
-        }
-
-      };
-
-      el.appendChild(corediv);
-
-
-    }
-  }
-
-=======
     this.play = function () {};
     this.stop = function () {};
     this.pause = function () {};
     
     this.volume = function () {};
     this.rewind = function () {};
->>>>>>> origin/refactore_branch
 
     this.next = function () {};
     this.prev = function () {};

@@ -34,6 +34,7 @@
 	<script type="text/javascript" src="/javascripts/main.js"></script>
 
 	<link rel="stylesheet/less" type="text/css" href="/stylesheets/index.less">
+	<!-- <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css"> -->
 
 	<script src="/bower_components/less/dist/less-1.7.0.min.js" type="text/javascript"></script>
 
@@ -74,6 +75,10 @@
 			<div class="icon repeat"></div>
 		</div>
 
+		<div id="player-song-description" class="left">
+			<div></div>
+		</div>
+
 		<div class="clear"></div>
 	</div>
 	
@@ -81,13 +86,20 @@
 		<canvas id="canvas" width="1024" height="100"></canvas>
 	</div>
 
+	<!-- <div id="dropable-playlist">
+		<iframe src=""></iframe>
+		<div class="container">Drop Here</div>
+	</div> -->
+
 	<div id="player-playlist">
 		<div class="player-resizer"></div>
+		<div class="search-header" style="display: none;">
+		  <span id="search-input-wrapper">
+		    <span class="glyphicon glyphicon-search"></span>
+		    <input type="text" placeholder="filter">
+		  </span>    
+		</div>
 		<div id="player-playlist-container"></div>
-	</div>
-
-	<div id="dropable-playlist">
-		<div class="container">Drop Here</div>		
 	</div>
 
 </body>

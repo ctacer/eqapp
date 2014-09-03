@@ -15,7 +15,6 @@ module.exports.music = function(req, res){
 
     result.path = '/resources' + path;
     result.folderName = 'music';
-    console.log( result );
     res.send( result );
 };
 

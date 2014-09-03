@@ -158,6 +158,7 @@
 		};
 
 		this.controller('chooseSong', songModel);
+    jQuery("#player-song-description>div").text(songModel.name);
 	};
 	
 	PlaylistView.prototype.setSongChooseEvents = function () {

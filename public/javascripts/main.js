@@ -6,6 +6,6 @@ jQuery(function () {
 
 	var player = new global.Player(global);
 
-  jQuery("#dropable-playlist>.container").droppable();
+  jQuery("#dropable-playlist>iframe").droppable();
 
 });

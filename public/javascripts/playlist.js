@@ -33,7 +33,7 @@
 
   	var array = this.playlistModelBuilder(playlist);
   	playlist.folders.forEach(function (folder) {
-  		array = array.concat(self.playlistModelBuilder(folder));
+  		array = array.concat(self.buildPlaylistModel(folder));
   	});
 
   	return array;

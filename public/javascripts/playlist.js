@@ -183,12 +183,23 @@
 		jQuery('.playlist-trek').off('click').on('click', handler);
 	};
 
-  PlaylistView.prototype.setPauseEvents = function () {
+  PlaylistView.prototype.setMouseEvents = function () {
     var self = this;
 
     var handler = function (event) {
+      console.log(event.keyCode);
       if (event.keyCode === 32) {
         self.controller('togglePlay');
+        event.preventDefault && event.preventDefault();
+        return false;
+      }
+      else if (event.keyCode === 39) {
+        self.controller('nextSong');
+        event.preventDefault && event.preventDefault();
+        return false;
+      }
+      else if (event.keyCode === 37) {
+        self.controller('prevSong');
         event.preventDefault && event.preventDefault();
         return false;
       }
@@ -280,7 +291,7 @@
 	PlaylistView.prototype.setPlaylistEvents = function () {
 		this.setFolderExpandingEvents();
 		this.setSongChooseEvents();
-    this.setPauseEvents();
+    this.setMouseEvents();
     this.setPlaybackControllsEvent();
     this.setPlaylistMoveEvent();
     this.setPlayerVolumeEvents();

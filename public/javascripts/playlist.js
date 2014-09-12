@@ -57,6 +57,8 @@
   PlaylistModel.prototype.prevSong = function () {
     if (this.played.length > 1) {
       this.playing = this.played[this.played.length - 2];
+      this.played.pop();
+      this.played.pop();
       this.throwNextSong();
     }
   };

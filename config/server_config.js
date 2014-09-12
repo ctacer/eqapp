@@ -6,7 +6,8 @@ var config = {
 			'port' : 3000
 		},
 		'resources' : {
-			'dir' : 'C:/Users/sstasishin/Music/all/last',
+			'root' : 'C:/Users/sstasishin/Music/all/',
+			'dir' : 'C:/Users/sstasishin/Music/all/[curr]',
 			'dirExperimental': 'C:/'
 		}
 	}
@@ -61,6 +62,10 @@ exports.configurate = function (environment) {
 	}
 	else {
 		conf = buidConfiguration(config['dev']);
+	}
+
+	if (process.argv.length > 2 ) {
+		conf.resources.dir = conf.resources.root + process.argv[2];
 	}
 
 	console.log(conf);
